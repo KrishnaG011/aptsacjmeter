@@ -4,14 +4,14 @@ services:
       container_name: ${PROJECT_NAME}
       image: krkrishna011/apachejmeter-master:v0.2
       volumes:
-        - /opt/aptsac/jmeter/workspace/${PROJECT_NAME}:/opt/jmeter/bin/sharedfolder/Script
-        - /opt/aptsac/jmeter/workspace/report:/opt/jmeter/bin/sharedfolder/Report
-        - /opt/aptsac/jmeter/workspace/results:/opt/jmeter/bin/Results
+        - ${Script_Path}:/opt/jmeter/bin/sharedfolder/Script
+        - ${Report_Path}:/opt/jmeter/bin/sharedfolder/Report
+        - ${Result_Path}:/opt/jmeter/bin/Results
       environment:
         - Extra_params=${Extra_params}
         - Users=${Users}
         - Duration=${Duration}
-      command: sh +x /opt/jmeter/bin/sharedfolder/Script/script_jmeter.sh
+      command: sh +x ${Script_Path}/script_jmeter.sh
     
     filebeatapts:
       container_name: filebeat-container
@@ -21,7 +21,7 @@ services:
         args:
           ELK_VERSION: 7.9.2
       volumes:
-        - /opt/aptsac/jmeter/workspace/report/:/var/log/jmeter/
+        - ${Report_Path}/:/var/log/jmeter/
       command: ["--strict.perms=false"]
       depends_on:
         - node1
